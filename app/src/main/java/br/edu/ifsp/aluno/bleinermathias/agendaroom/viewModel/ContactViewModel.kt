@@ -32,4 +32,13 @@ class ContactViewModel(application: Application):AndroidViewModel(application) {
         }
     }
 
+    fun update(contact: Contact) = viewModelScope.launch(Dispatchers.IO){
+        repository.update(contact)
+    }
+
+    fun delete(contact: Contact) = viewModelScope.launch(Dispatchers.IO){
+        repository.delete(contact)
+    }
+
+
 }
