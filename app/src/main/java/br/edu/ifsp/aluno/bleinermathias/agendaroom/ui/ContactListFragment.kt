@@ -5,13 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.aluno.bleinermathias.agendaroom.R
+import br.edu.ifsp.aluno.bleinermathias.agendaroom.adapter.ContactAdapter
+import br.edu.ifsp.aluno.bleinermathias.agendaroom.data.Contact
 import br.edu.ifsp.aluno.bleinermathias.agendaroom.databinding.FragmentContactListBinding
+import br.edu.ifsp.aluno.bleinermathias.agendaroom.viewModel.ContactViewModel
 
 class ContactListFragment : Fragment() {
     private var _binding: FragmentContactListBinding? = null
     private val binding get() = _binding!!
+    lateinit var contactAdapter: ContactAdapter
+    lateinit var viewModel: ContactViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +35,22 @@ class ContactListFragment : Fragment() {
                 findNavController().navigate(R.id.action_contactListFragment_to_registerFragment)
             }
         }
+        configureRecyclerView()
 
         return root
+    }
+
+    private fun configureRecyclerView() {
+        viewModel = ViewModelProvider(this).get(ContactViewModel::class.java)
+        viewModel.allContacts.observe(viewLifecycleOwner) { list ->
+            list?.let {
+                contactAdapter.updateList(list as ArrayList<Contact>)
+            }
+        }
+
+        val recyclerView = binding.recyclerview
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        contactAdapter = ContactAdapter()
+        recyclerView.adapter = contactAdapter
     }
 }
