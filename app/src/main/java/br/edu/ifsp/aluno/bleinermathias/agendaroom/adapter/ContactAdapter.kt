@@ -1,17 +1,20 @@
 package br.edu.ifsp.aluno.bleinermathias.agendaroom.adapter
 
 import android.location.GnssAntennaInfo.Listener
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.ifsp.aluno.bleinermathias.agendaroom.data.Contact
 import br.edu.ifsp.aluno.bleinermathias.agendaroom.databinding.TileContactBinding
 
-class ContactAdapter():RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
+class ContactAdapter():RecyclerView.Adapter<ContactAdapter.ContactViewHolder>(), Filterable {
 
     private lateinit var tileContactBinding: TileContactBinding
     var contactList = ArrayList<Contact>()
-    var contactListFilterable  = ArrayList<Contact>()
+    var contactListFilterable = ArrayList<Contact>()
     var listener:ContactListener?=null
 
 
@@ -19,10 +22,6 @@ class ContactAdapter():RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
     interface ContactListener
     {
         fun onItemClick(pos: Int)
-    }
-
-    fun updatelist(newList: ArrayList<Contact>){
-        contactList = newList
     }
 
     fun setClickListener(listener: ContactListener) {
@@ -35,7 +34,6 @@ class ContactAdapter():RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
         notifyDataSetChanged()
     }
 
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -43,13 +41,18 @@ class ContactAdapter():RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
         tileContactBinding = TileContactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ContactViewHolder(tileContactBinding)
     }
+
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-        holder.nameViewHolder.text = contactList[position].name
-        holder.phoneViewHolder.text = contactList[position].phone
+        holder.apply {
+            nameViewHolder.text = contactListFilterable[position].name
+            phoneViewHolder.text = contactListFilterable[position].phone
+        }
     }
+
     override fun getItemCount(): Int {
-        return contactList.size
+        return contactListFilterable.size
     }
+
     inner class ContactViewHolder(view:TileContactBinding): RecyclerView.ViewHolder(view.root)
     {
         val nameViewHolder = view.nome
@@ -60,6 +63,37 @@ class ContactAdapter():RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
             }
         }
 
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter(){
+
+            override fun performFiltering(searchText: CharSequence?): FilterResults {
+
+                if (searchText.toString().isEmpty()) {
+                    contactListFilterable = contactList
+                } else{
+                    val resultList = ArrayList<Contact>()
+                    for (row in contactList) {
+                        if (row.name.lowercase().contains(searchText.toString().lowercase())) {
+                            resultList.add(row)
+                        }
+                    }
+                    contactListFilterable = resultList
+                }
+
+                val filterResults = FilterResults()
+                filterResults.values = contactListFilterable
+                return filterResults
+
+            }
+
+            override fun publishResults(searchText: CharSequence?, filteredResult: FilterResults?) {
+                contactListFilterable = filteredResult?.values as ArrayList<Contact>
+                notifyDataSetChanged()
+            }
+
+        }
     }
 
 }
