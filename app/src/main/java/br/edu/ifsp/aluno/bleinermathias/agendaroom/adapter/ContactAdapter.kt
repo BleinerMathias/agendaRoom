@@ -1,5 +1,6 @@
 package br.edu.ifsp.aluno.bleinermathias.agendaroom.adapter
 
+import android.location.GnssAntennaInfo.Listener
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,14 +11,27 @@ class ContactAdapter():RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
 
     private lateinit var tileContactBinding: TileContactBinding
     var contactList = ArrayList<Contact>()
+    var contactListFilterable  = ArrayList<Contact>()
+    var listener:ContactListener?=null
+
+
+
+    interface ContactListener
+    {
+        fun onItemClick(pos: Int)
+    }
 
     fun updatelist(newList: ArrayList<Contact>){
         contactList = newList
     }
 
+    fun setClickListener(listener: ContactListener) {
+        this.listener = listener
+    }
+
     fun updateList(newList: ArrayList<Contact> ){
         contactList = newList
-        var contatosListaFilterable = contactList
+        contactListFilterable = contactList
         notifyDataSetChanged()
     }
 
@@ -40,7 +54,12 @@ class ContactAdapter():RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
     {
         val nameViewHolder = view.nome
         val phoneViewHolder = view.fone
-    }
+        init {
+            view.root.setOnClickListener {
+                listener?.onItemClick(adapterPosition)
+            }
+        }
 
+    }
 
 }

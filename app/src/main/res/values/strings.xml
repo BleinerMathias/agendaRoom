@@ -6,4 +6,5 @@
     <string name="fone">Phone</string>
     <string name="nome">Name</string>
     <string name="salvar">Save</string>
+    <string name="button_save_contact">Button save contact</string>
 </resources>

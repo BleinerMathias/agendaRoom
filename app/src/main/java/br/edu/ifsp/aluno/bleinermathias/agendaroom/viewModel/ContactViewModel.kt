@@ -26,4 +26,10 @@ class ContactViewModel(application: Application):AndroidViewModel(application) {
         repository.insert(contact)
     }
 
+    fun getContactById(id:Int){
+        viewModelScope.launch {
+            contact = repository.getContactById(id)
+        }
+    }
+
 }

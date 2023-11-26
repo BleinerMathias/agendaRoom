@@ -3,20 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav"
-    app:startDestination="@id/contactListFragment">
-
+    app:startDestination="@id/listaContatosFragment">
     <fragment
-        android:id="@+id/contactListFragment"
+        android:id="@+id/listaContatosFragment"
         android:name="br.edu.ifsp.aluno.bleinermathias.agendaroom.ui.ContactListFragment"
-        android:label="fragment_contact_list"
-        tools:layout="@layout/fragment_contact_list" >
+        android:label="Contatos"
+        tools:layout="@layout/fragment_details_contact" >
         <action
             android:id="@+id/action_contactListFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
+            app:destination="@id/cadastroFragment" />
+        <action
+            android:id="@+id/action_contactListFragment_to_detailsContactFragment"
+            app:destination="@id/detalheFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/registerFragment"
+        android:id="@+id/cadastroFragment"
         android:name="br.edu.ifsp.aluno.bleinermathias.agendaroom.ui.RegisterFragment"
-        android:label="fragment_register"
+        android:label="Novo contato"
         tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/detalheFragment"
+        android:name="br.edu.ifsp.aluno.bleinermathias.agendaroom.ui.DetailsContactFragment"
+        android:label="Detalhes"
+        tools:layout="@layout/fragment_details_contact" />
 </navigation>

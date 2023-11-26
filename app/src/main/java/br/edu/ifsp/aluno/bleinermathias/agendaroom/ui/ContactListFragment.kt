@@ -52,5 +52,22 @@ class ContactListFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         contactAdapter = ContactAdapter()
         recyclerView.adapter = contactAdapter
+
+        val listener = object : ContactAdapter.ContactListener {
+            override fun onItemClick(pos: Int) {
+                val c = contactAdapter.contactListFilterable[pos]
+                val bundle = Bundle()
+                bundle.putInt("contactId", c.id)
+                findNavController().navigate(
+                    R.id.action_contactListFragment_to_detailsContactFragment,
+                    bundle
+                )
+            }
+        }
+
+        contactAdapter.setClickListener(listener)
+
+
+
     }
 }
